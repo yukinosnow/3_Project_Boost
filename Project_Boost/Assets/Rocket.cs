@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Rocket : MonoBehaviour {
 
+
+    [SerializeField] float rcsThrust = 100f; //unity can see and change this value, but other script cannot change from other script
+    [SerializeField] float thrustPower = 10f;
     Rigidbody rigidbody;
     AudioSource audiosource;
 	// Use this for initialization
@@ -15,28 +18,40 @@ public class Rocket : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        ProcessInput();
-	}
+        Rotate();
+        Thrust();
+    }
 
-    private void ProcessInput()
+    private void Rotate()
     {
-        if(Input.GetKey(KeyCode.A)&&!Input.GetKey(KeyCode.D))
+        rigidbody.freezeRotation = true;//take manual control of rotation
+        
+        float rotationThisFrame = rcsThrust * Time.deltaTime;
+        if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
         {
-            print("Rotating Left");
-            transform.Rotate(Vector3.forward);
+            
+            //print("Rotating Left");
+            transform.Rotate(Vector3.forward* rotationThisFrame);
         }
-        if(Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
         {
-            print("Rotating Right");
-            transform.Rotate(Vector3.back);
+            
+            //print("Rotating Right");
+            transform.Rotate(Vector3.back*rotationThisFrame);
         }
-        if(Input.GetKey(KeyCode.Space))//Can thrust while rotating
+        rigidbody.freezeRotation = false;//resume physics control of rotation
+
+    }
+
+    private void Thrust()
+    {
+        if (Input.GetKey(KeyCode.Space))//Can thrust while rotating
         {
             //print("Thrusting");
-            rigidbody.AddRelativeForce(Vector3.up);
-            
+            rigidbody.AddRelativeForce(Vector3.up* thrustPower);
+
         }
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             audiosource.Play();
         }
