@@ -680,4 +680,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rcsThrust: 100
-  thrustPower: 10
+  thrustPower: 20
